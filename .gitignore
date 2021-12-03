@@ -1,3 +1,8 @@
 *.out
 *.txt
 *.gch
+
+
+# Added by cargo
+
+/target
