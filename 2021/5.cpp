@@ -46,6 +46,14 @@ vector<int> getRangeV(vector<vector<int>> points) {
     return v;
 }
 
+bool isDiag(vector<vector<int>> &points) {
+    if(abs(points[0][0] - points[1][0]) == abs(points[0][1] - points[1][1])) {
+        cout << "oh its diag " << points[0][0] << "," << points[0][1] << " " << points[1][0] << "," << points[1][1] << "\n";
+        return 1;
+    }
+    return 0;
+}
+
 //wish I was better at functional programming in C++, this is the same logic as printing
 int countTwo(vector<vector<int>> matrix) {
     int sum = 0;
@@ -87,8 +95,8 @@ vector<vector<int>> parse_line(string line) {
 
 int main() {
     string line;
-    vector<vector<int>> lineCounts(10, vector<int>(10, 0));
-    ifstream myfile("data/5-test");
+    vector<vector<int>> lineCounts(1000, vector<int>(1000, 0));
+    ifstream myfile("data/5.txt");
     if (myfile) 
     {
         while (getline( myfile, line)) {
@@ -115,13 +123,26 @@ int main() {
                 }
             }
             //diag
-            //need to know if increment x & y or drecrement.
-            //else {
-                //for(int i = currentPoints[0][1]; i < 
-                
-            //}
+            //first determine if diag 
+            bool diag = isDiag(currentPoints);
+            if(diag) {
+                auto smallerX = currentPoints[0][0] < currentPoints[1][0] ? currentPoints[0] : currentPoints[1]; 
+                auto largerX = currentPoints[0][0] > currentPoints[1][0] ? currentPoints[0] : currentPoints[1]; 
+                int y = smallerX[1];
+                cout << "y is " << y << "\n";
+                for(int x = smallerX[0]; x <= largerX[0]; x++) {
+                   //not exactly sure how I swapped these 
+                    lineCounts[y][x] += 1;
+                    cout << "x is " << x << " y is " << y << "\n";
+                    cout << "lineCount is " << lineCounts[x][y] << "\n";
+                    if(smallerX[1] < largerX[1]){
+                        y++;
+                    } else {
+                        y--;
+                    }
+                }
+            }
             //printMatrix(lineCounts);
-
             //count 2 or more
             int sum = countTwo(lineCounts);
             cout << "sum is " << sum << "\n";
