@@ -32,9 +32,8 @@ int print_fishies(vector<int> &fishies) {
 map<int, long long> getNewFishiesMap(map<int, long long> fishiesMap) {
     map<int, long long> newFishiesMap;
     for (const auto &x : fishiesMap) {
-        //for example if it's 3;
-        int num = x.first; //0
-        long long fishCount = x.second; // at first its 0
+        int num = x.first; 
+        long long fishCount = x.second;
         if(num == 0) {
             if(newFishiesMap.count(8) == 0) {
                 newFishiesMap.insert(pair<int, long long>(8, fishCount));
@@ -72,7 +71,7 @@ int main() {
     map<int, long long> fishiesMap;
     ifstream myfile("data/6.txt");
     cout << fishies.max_size() << "\n";
-    if (myfile)  // same as: if (myfile.good())
+    if (myfile)  
     {
         while (getline( myfile, line)) {
             fishies = parse_line(line);
