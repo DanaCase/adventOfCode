@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -22,12 +23,14 @@ int getSum(vector<int> lowPoints) {
     return count;
 }
 
+
 int main() {
     string line;
     vector<vector<int>> heights;
     vector<int> lowPoints;
     vector<pair<int,int>> lowPointLocations;
-    ifstream myfile("data/9-test");
+    vector<pair<int,int>> nines;
+    ifstream myfile("data/9.txt");
     if (myfile)  
     {
         while (getline( myfile, line)) {
@@ -73,18 +76,65 @@ int main() {
                         //lowPoints.push_back(heights[i][j]);
                         //cout << "new low point " << heights[i][j] << "\n";
                 //}
+                //
+                //for part 2
+                if (myPoint == 9) {
+                    //cout << "nine found " << i << " " << j << "\n";
+                    nines.push_back(pair<int, int>(i, j));
+                }
             }
         }
 
         int sum = getSum(lowPoints);
         cout << "sum is " << sum << "\n";
 
-        //part 2
-        //for each low point...traverse out in all directions until you hit an edge or a  9
-        //you could pre calculate 9s if you wanted...
-        for(auto &x : lowPointLocations) {
-            for()
+        vector<int>basinSizes;
+
+        for (auto &myLowPoint : lowPointLocations) {
+            vector<pair<int, int>> basin;
+            basin.push_back(myLowPoint);
+            //had to use an iterator instead of auto, not sure why
+            for(int i = 0; i < basin.size(); i++) {
+                pair<int, int> p = basin[i];
+                cout << "leng " << basin.size() << "\n";
+                if(p.first - 1 >= 0 && heights[p.first - 1][p.second] !=9) {
+                    pair<int, int> point (p.first -1, p.second);
+                    if(count(basin.begin(), basin.end(), point) == 0) {
+                        basin.push_back(pair<int, int>(p.first -1, p.second));
+                    }
+                }
+                if(p.first + 1 < heights.size() && heights[p.first + 1][p.second] !=9) {
+                    pair<int, int> point (p.first +1, p.second);
+                    if(count(basin.begin(), basin.end(), point) == 0) {
+                        basin.push_back(point);
+                    }
+                }
+                if(p.second - 1 >= 0 && heights[p.first][p.second -1] !=9) {
+                    pair<int,int> point (p.first, p.second -1);
+                    if(count(basin.begin(), basin.end(), point) == 0) {
+                        basin.push_back(point); 
+                    }
+                }
+                if(p.second + 1 < heights[0].size() && heights[p.first][p.second + 1] != 9) {
+                    pair<int, int> point(p.first, p.second + 1);
+                    if(count(basin.begin(), basin.end(), point) == 0) {
+                        basin.push_back(point);
+                    }
+                }
+            }
+            for(auto &p : basin) {
+                cout << p.first << " " << p.second << "\n";
+            }
+            basinSizes.push_back(basin.size());
         }
+
+        for(auto &x : basinSizes) {
+            cout << x << "\n";
+        }
+
+        sort(basinSizes.begin(), basinSizes.end(), greater<int>());
+
+        cout << basinSizes[0] * basinSizes[1] * basinSizes[2] << "\n";
 
     }
     else cout << "fooey\n";
