@@ -50,11 +50,29 @@ void parse_line(string line) {
     addEdge(adj, edge[0], edge[1], smallu, smallv);
 }
 
-void search(enode node, map<string, bool> m, vector<enode> path, vector<vector<enode> >& paths) {
+bool shouldContinueSearchPartOne(map<string, bool> m, string nodename){
+    return !m[nodename];
+}
+
+bool shouldContinueSearchPartTwo(map<string, bool> m, string nodename, bool hitIt) {
+    if (nodename == "start") {
+        return false;
+    }
+    if(!hitIt) {
+        return true;
+    } else {
+        return !m[nodename];
+    }
+}
+
+void search(enode node, map<string, bool> m, vector<enode> path, vector<vector<enode> >& paths, bool hitIt) {
     cout << "working on node: " << node.name << "\n";
     path.push_back(node);
     cout << "current path size: " << path.size() << "\n";
     if (node.small) {
+        if (m[node.name]) {
+            hitIt = true;
+        }
         m[node.name] = true;
     }
     if (node.name == "end"){
@@ -67,8 +85,11 @@ void search(enode node, map<string, bool> m, vector<enode> path, vector<vector<e
         cout << adj[node.name].size();
         enode checknode = adj[node.name][i];
         //not over visited
-        if (!m[checknode.name]) {
-            search(checknode, m, path, paths);
+        if (
+                //shouldContinueSearchPartOne(m, checknode.name)
+                shouldContinueSearchPartTwo(m, checknode.name, hitIt)
+            ) {
+            search(checknode, m, path, paths, hitIt);
         }
     }
 }
@@ -91,7 +112,7 @@ int main() {
         enode start = {.name = "start", .visited = true, .small = true};
         vector<enode> path;
 
-        search(start, visited, path, paths);
+        search(start, visited, path, paths, false);
         
         cout << "paths size: " << paths.size() << "\n";
 
