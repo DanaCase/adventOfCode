@@ -63,11 +63,11 @@ void countDots(vector<vector<int> >& sheet) {
         for(int x = 0; x < sheet.size(); x++)
             //cout << x ;
             if(sheet[x][y] == 1){
-                cout << '#';
+                cout << "# ";
                 count++;
             }
             else {
-                cout << '.';
+                cout << ". ";
             }
         cout << "\n";
     }
@@ -132,14 +132,10 @@ int main() {
     
         countDots(sheet);
 
-        sheet = fold(sheet, instructions[0]);
-
-        countDots(sheet);
-
-        //sheet = fold(sheet, instructions[1]);
-
-        //countDots(sheet);
-        
+        for(auto inst : instructions) {
+            sheet = fold(sheet, inst);
+            countDots(sheet);
+        } 
     }
     else cout << "fooey\n";
 
